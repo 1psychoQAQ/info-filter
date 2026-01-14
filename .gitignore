@@ -1,0 +1,14 @@
+# 数据文件
+data/
+*.db
+
+# 环境变量
+.env
+
+# 构建产物
+server
+*.exe
+
+# IDE
+.idea/
+.vscode/

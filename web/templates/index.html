@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INFO.FILTER // 信息过滤器</title>
+    <link rel="stylesheet" href="/static/css/cyberpunk.css">
+</head>
+<body>
+    <!-- 扫描线效果 -->
+    <div class="scanlines"></div>
+
+    <!-- 网格背景 -->
+    <div class="grid-bg"></div>
+
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <div class="logo glitch" data-text="INFO.FILTER">INFO.FILTER</div>
+            <div class="tagline">// 每日顶尖信息 · AI驱动筛选</div>
+        </header>
+
+        <!-- 统计面板 -->
+        <div class="stats-panel">
+            <div class="stat-item">
+                <span class="stat-value" id="total-count">--</span>
+                <span class="stat-label">总抓取</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value neon-pink" id="qualified-count">--</span>
+                <span class="stat-label">通过筛选</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value neon-cyan" id="pass-rate">--</span>
+                <span class="stat-label">通过率</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value neon-purple" id="avg-score">--</span>
+                <span class="stat-label">平均分</span>
+            </div>
+        </div>
+
+        <!-- 筛选器 -->
+        <div class="filter-bar">
+            <button class="filter-btn active" data-source="">ALL</button>
+            <button class="filter-btn" data-source="HackerNews">HN</button>
+            <button class="filter-btn" data-source="ProductHunt">PH</button>
+            <button class="filter-btn" data-source="GitHub">GH</button>
+            <button class="filter-btn" data-source="Lobsters">LOB</button>
+        </div>
+
+        <!-- 信息列表 -->
+        <div class="items-container" id="items-list">
+            <div class="loading">
+                <span class="loading-text">LOADING DATA</span>
+                <span class="loading-dots">...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <footer class="footer">
+        <span class="footer-text">POWERED BY AI // SCORE ≥ 70 TO PASS</span>
+        <span class="footer-link">makestuff.top</span>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
