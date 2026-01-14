@@ -6,7 +6,7 @@ data/
 .env
 
 # 构建产物
-server
+/server
 *.exe
 
 # IDE
