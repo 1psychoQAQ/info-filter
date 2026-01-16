@@ -3,6 +3,8 @@
 # 变量
 APP := info-filter
 COMMIT := $(shell git rev-parse --short HEAD)
+TIMESTAMP := $(shell date +%m%d%H%M)
+VERSION := $(COMMIT)-$(TIMESTAMP)
 SERVER := root@47.83.228.126
 SSH_KEY := ~/Documents/mypem/first.pem
 REMOTE := /opt/makestuff/$(APP)
@@ -30,11 +32,11 @@ test:
 
 deploy:
 	@echo "编译..."
-	@GOOS=linux GOARCH=amd64 go build -o /tmp/$(APP)-$(COMMIT) ./cmd/server
+	@GOOS=linux GOARCH=amd64 go build -o /tmp/$(APP)-$(VERSION) ./cmd/server
 	@echo "上传..."
-	@scp -i $(SSH_KEY) /tmp/$(APP)-$(COMMIT) $(SERVER):$(REMOTE)/releases/
-	@ssh -i $(SSH_KEY) $(SERVER) "chmod +x $(REMOTE)/releases/$(APP)-$(COMMIT) && ln -sf $(REMOTE)/releases/$(APP)-$(COMMIT) $(REMOTE)/current && systemctl restart $(APP)"
-	@echo "✅ $(APP)@$(COMMIT) deployed"
+	@scp -i $(SSH_KEY) /tmp/$(APP)-$(VERSION) $(SERVER):$(REMOTE)/releases/
+	@ssh -i $(SSH_KEY) $(SERVER) "chmod +x $(REMOTE)/releases/$(APP)-$(VERSION) && ln -sf $(REMOTE)/releases/$(APP)-$(VERSION) $(REMOTE)/current && systemctl restart $(APP)"
+	@echo "✅ $(APP)@$(VERSION) deployed"
 
 rollback:
 	@echo "可用版本:"
