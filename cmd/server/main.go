@@ -36,13 +36,18 @@ func main() {
 	// 启动HTTP服务
 	r := gin.Default()
 
-	// 静态文件
-	r.Static("/static", "./web/static")
-	r.LoadHTMLGlob("web/templates/*")
+	// 健康检查
+	r.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{"status": "ok", "service": "info-filter"})
+	})
 
-	// 首页
+	// 首页 - 返回 API 信息
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(200, "index.html", nil)
+		c.JSON(200, gin.H{
+			"service":   "info-filter",
+			"version":   "1.0.0",
+			"endpoints": []string{"/api/items", "/api/items/today", "/api/stats", "/health"},
+		})
 	})
 
 	// API路由
