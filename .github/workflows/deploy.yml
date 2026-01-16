@@ -42,3 +42,14 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/user/packages/container/info-filter \
             -d '{"visibility":"public"}' || true
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: root
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /opt/makestuff
+            docker compose pull info-filter
+            docker compose up -d info-filter
