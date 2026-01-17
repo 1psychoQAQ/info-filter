@@ -2,9 +2,7 @@
 
 # 变量
 APP := info-filter
-COMMIT := $(shell git rev-parse --short HEAD)
-TIMESTAMP := $(shell date +%m%d%H%M)
-VERSION := $(COMMIT)-$(TIMESTAMP)
+VERSION := $(shell git rev-parse --short HEAD)
 SERVER := root@47.83.228.126
 SSH_KEY := ~/Documents/mypem/first.pem
 REMOTE := /opt/makestuff/$(APP)
@@ -17,7 +15,7 @@ help:
 	@echo "  make build    本地构建"
 	@echo "  make test     运行测试"
 	@echo "  make deploy   部署到服务器"
-	@echo "  make rollback 回滚到指定版本"
+	@echo "  make rollback V=xxx 回滚到指定版本"
 	@echo "  make logs     查看服务日志"
 	@echo "  make clean    清理构建产物"
 	@echo "────────────────────────────────"
@@ -36,14 +34,20 @@ deploy:
 	@echo "上传..."
 	@scp -i $(SSH_KEY) /tmp/$(APP)-$(VERSION) $(SERVER):$(REMOTE)/releases/
 	@ssh -i $(SSH_KEY) $(SERVER) "chmod +x $(REMOTE)/releases/$(APP)-$(VERSION) && ln -sf $(REMOTE)/releases/$(APP)-$(VERSION) $(REMOTE)/current && systemctl restart $(APP)"
-	@echo "✅ $(APP)@$(VERSION) deployed"
+	@echo "✅ $(APP)@$(VERSION)"
 
 rollback:
+ifndef V
 	@echo "可用版本:"
 	@ssh -i $(SSH_KEY) $(SERVER) "ls -t $(REMOTE)/releases/ | head -10"
-	@read -p "输入版本: " v; \
-	ssh -i $(SSH_KEY) $(SERVER) "ln -sf $(REMOTE)/releases/$$v $(REMOTE)/current && systemctl restart $(APP)"
-	@echo "✅ 回滚完成"
+	@echo ""
+	@echo "用法: make rollback V=<commit>"
+	@echo "示例: make rollback V=abc1234"
+else
+	@echo "回滚到 $(V)..."
+	@ssh -i $(SSH_KEY) $(SERVER) "ln -sf $(REMOTE)/releases/$(APP)-$(V) $(REMOTE)/current && systemctl restart $(APP)"
+	@echo "✅ $(APP)@$(V)"
+endif
 
 logs:
 	@ssh -i $(SSH_KEY) $(SERVER) "journalctl -u $(APP) -f --no-pager -n 50"
