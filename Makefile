@@ -3,8 +3,8 @@
 # 变量
 APP := info-filter
 VERSION := $(shell git rev-parse --short=8 HEAD)
-SERVER := root@47.83.228.126
-SSH_KEY := ~/Documents/mypem/first.pem
+SERVER := root@$(DEPLOY_HOST)
+SSH_KEY := $(DEPLOY_KEY)
 REMOTE := /opt/makestuff/$(APP)
 
 .DEFAULT_GOAL := help
