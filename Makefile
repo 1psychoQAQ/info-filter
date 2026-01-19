@@ -1,8 +1,8 @@
-.PHONY: build test deploy rollback logs clean help
+.PHONY: build test deploy rollback logs status clean help
 
 # 变量
 APP := info-filter
-VERSION := $(shell git rev-parse --short HEAD)
+VERSION := $(shell git rev-parse --short=8 HEAD)
 SERVER := root@47.83.228.126
 SSH_KEY := ~/Documents/mypem/first.pem
 REMOTE := /opt/makestuff/$(APP)
@@ -63,6 +63,10 @@ else
 			echo '❌ 版本不存在: $(V)'; \
 		fi"
 endif
+
+status:
+	@echo "当前版本:"
+	@ssh -i $(SSH_KEY) $(SERVER) "readlink $(REMOTE)/current 2>/dev/null | grep -o '[^-]*$$'"
 
 logs:
 	@ssh -i $(SSH_KEY) $(SERVER) "journalctl -u $(APP) -f --no-pager -n 50"
