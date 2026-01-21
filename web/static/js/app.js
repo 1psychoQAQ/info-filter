@@ -7,9 +7,24 @@ class InfoFilter {
     }
 
     async init() {
+        this.showCurrentDate();
         await this.loadStats();
         await this.loadItems();
         this.bindEvents();
+    }
+
+    showCurrentDate() {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            weekday: 'short'
+        });
+        const dateEl = document.getElementById('current-date');
+        if (dateEl) {
+            dateEl.textContent = dateStr;
+        }
     }
 
     bindEvents() {
@@ -131,7 +146,32 @@ class InfoFilter {
     }
 
     renderItem(item) {
-        const date = new Date(item.created_at).toLocaleDateString('zh-CN');
+        // 处理多种日期格式
+        let date = '--';
+        if (item.created_at) {
+            try {
+                // 尝试直接解析
+                let d = new Date(item.created_at);
+                // 如果解析失败，尝试其他格式
+                if (isNaN(d.getTime())) {
+                    // 可能是 Go 的 time.Time 格式: "2006-01-02T15:04:05Z07:00"
+                    d = new Date(item.created_at.replace(' ', 'T'));
+                }
+                if (!isNaN(d.getTime())) {
+                    date = d.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+                }
+            } catch (e) {
+                console.warn('Date parse error:', item.created_at);
+            }
+        } else if (item.CreatedAt) {
+            // GORM 默认字段名
+            try {
+                const d = new Date(item.CreatedAt);
+                if (!isNaN(d.getTime())) {
+                    date = d.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+                }
+            } catch (e) {}
+        }
 
         return `
             <div class="item-card" data-item-id="${item.ID}">

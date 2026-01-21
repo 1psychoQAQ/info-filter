@@ -139,6 +139,28 @@ body {
     letter-spacing: 2px;
 }
 
+/* 日期指示器 */
+.date-indicator {
+    margin-top: 20px;
+    padding: 12px 24px;
+    display: inline-block;
+    background: rgba(5, 217, 232, 0.1);
+    border: 1px solid var(--neon-cyan);
+    border-radius: 4px;
+    font-size: 1rem;
+    letter-spacing: 2px;
+}
+
+.date-label {
+    color: var(--text-secondary);
+}
+
+.date-value {
+    color: var(--neon-cyan);
+    font-weight: bold;
+    text-shadow: 0 0 10px var(--neon-cyan);
+}
+
 /* 统计面板 */
 .stats-panel {
     display: grid;
