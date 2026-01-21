@@ -41,9 +41,11 @@ deploy:
 	else \
 		echo "编译..." && \
 		GOOS=linux GOARCH=amd64 go build -o /tmp/$(APP)-$(VERSION) ./cmd/server && \
-		echo "上传..." && \
-		ssh -i $(SSH_KEY) $(SERVER) "mkdir -p $(REMOTE)/releases" && \
+		echo "上传二进制..." && \
+		ssh -i $(SSH_KEY) $(SERVER) "mkdir -p $(REMOTE)/releases $(REMOTE)/web" && \
 		scp -i $(SSH_KEY) /tmp/$(APP)-$(VERSION) $(SERVER):$(REMOTE)/releases/ && \
+		echo "上传前端..." && \
+		scp -r -i $(SSH_KEY) web/templates web/static $(SERVER):$(REMOTE)/web/ && \
 		ssh -i $(SSH_KEY) $(SERVER) "chmod +x $(REMOTE)/releases/$(APP)-$(VERSION) && ln -sf $(REMOTE)/releases/$(APP)-$(VERSION) $(REMOTE)/current && systemctl restart $(APP)" && \
 		echo "✅ $(APP)@$(VERSION)"; \
 	fi

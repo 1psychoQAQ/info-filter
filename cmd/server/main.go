@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -36,17 +37,28 @@ func main() {
 	// 启动HTTP服务
 	r := gin.Default()
 
+	// 查找 web 目录
+	webDir := "web"
+	// 生产环境：/opt/makestuff/info-filter/web
+	if _, err := os.Stat("/opt/makestuff/info-filter/web"); err == nil {
+		webDir = "/opt/makestuff/info-filter/web"
+	}
+
+	// 加载模板
+	r.LoadHTMLGlob(filepath.Join(webDir, "templates/*"))
+
+	// 静态文件
+	r.Static("/static", filepath.Join(webDir, "static"))
+
 	// 健康检查
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok", "service": "info-filter"})
 	})
 
-	// 首页 - 返回 API 信息
+	// 首页 - 渲染 HTML
 	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"service":   "info-filter",
-			"version":   "1.0.0",
-			"endpoints": []string{"/api/items", "/api/items/today", "/api/stats", "/health"},
+		c.HTML(200, "index.html", gin.H{
+			"title": "Info Filter",
 		})
 	})
 
