@@ -46,7 +46,7 @@ deploy:
 		scp -i $(SSH_KEY) /tmp/$(APP)-$(VERSION) $(SERVER):$(REMOTE)/releases/ && \
 		echo "上传前端..." && \
 		scp -r -i $(SSH_KEY) web/templates web/static $(SERVER):$(REMOTE)/web/ && \
-		ssh -i $(SSH_KEY) $(SERVER) "chmod +x $(REMOTE)/releases/$(APP)-$(VERSION) && ln -sf $(REMOTE)/releases/$(APP)-$(VERSION) $(REMOTE)/current && systemctl restart $(APP)" && \
+		ssh -i $(SSH_KEY) $(SERVER) "chmod +x $(REMOTE)/releases/$(APP)-$(VERSION) && cd $(REMOTE) && ln -sf releases/$(APP)-$(VERSION) current && systemctl restart $(APP)" && \
 		echo "✅ $(APP)@$(VERSION)"; \
 	fi
 
@@ -60,7 +60,7 @@ else
 	@echo "回滚到 $(V)..."
 	@ssh -i $(SSH_KEY) $(SERVER) "\
 		if [ -f $(REMOTE)/releases/$(APP)-$(V) ]; then \
-			ln -sf $(REMOTE)/releases/$(APP)-$(V) $(REMOTE)/current && systemctl restart $(APP) && echo '✅ $(APP)@$(V)'; \
+			cd $(REMOTE) && ln -sf releases/$(APP)-$(V) current && systemctl restart $(APP) && echo '✅ $(APP)@$(V)'; \
 		else \
 			echo '❌ 版本不存在: $(V)'; \
 		fi"
