@@ -39,9 +39,9 @@ func main() {
 
 	// 查找 web 目录
 	webDir := "web"
-	// 生产环境：/opt/makestuff/info-filter/web
-	if _, err := os.Stat("/opt/makestuff/info-filter/web"); err == nil {
-		webDir = "/opt/makestuff/info-filter/web"
+	// 生产环境：前端独立部署到 frontend 目录
+	if _, err := os.Stat("/opt/makestuff/frontend/info-filter"); err == nil {
+		webDir = "/opt/makestuff/frontend/info-filter"
 	}
 
 	// 加载模板
