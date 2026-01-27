@@ -5,7 +5,7 @@ APP := info-filter
 VERSION := $(shell git rev-parse --short=8 HEAD)
 SERVER := root@$(DEPLOY_HOST)
 SSH_KEY := $(DEPLOY_KEY)
-REMOTE := /opt/makestuff/$(APP)
+REMOTE := /opt/makestuff/backend/$(APP)
 
 .DEFAULT_GOAL := help
 
