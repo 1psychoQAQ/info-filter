@@ -50,7 +50,7 @@ deploy-backend:
 		GOOS=linux GOARCH=amd64 go build -o /tmp/$(APP)-$(VERSION) ./cmd/server && \
 		ssh -i $(SSH_KEY) $(SERVER) "mkdir -p $(REMOTE)/releases" && \
 		scp -i $(SSH_KEY) /tmp/$(APP)-$(VERSION) $(SERVER):$(REMOTE)/releases/ && \
-		ssh -i $(SSH_KEY) $(SERVER) "chmod +x $(REMOTE)/releases/$(APP)-$(VERSION) && cd $(REMOTE) && ln -sf releases/$(APP)-$(VERSION) current && systemctl restart $(APP)" && \
+		ssh -i $(SSH_KEY) $(SERVER) "chmod +x $(REMOTE)/releases/$(APP)-$(VERSION) && cd $(REMOTE) && ln -sfn releases/$(APP)-$(VERSION) current && systemctl restart $(APP)" && \
 		echo "✅ backend@$(VERSION)"; \
 	fi
 
@@ -70,7 +70,7 @@ else
 	@echo "回滚到 $(V)..."
 	@ssh -i $(SSH_KEY) $(SERVER) "\
 		if [ -f $(REMOTE)/releases/$(APP)-$(V) ]; then \
-			cd $(REMOTE) && ln -sf releases/$(APP)-$(V) current && systemctl restart $(APP) && echo '✅ $(APP)@$(V)'; \
+			cd $(REMOTE) && ln -sfn releases/$(APP)-$(V) current && systemctl restart $(APP) && echo '✅ $(APP)@$(V)'; \
 		else \
 			echo '❌ 版本不存在: $(V)'; \
 		fi"
